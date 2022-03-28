@@ -17,7 +17,7 @@ E 2 код шеннона
 using namespace std;
 const int N = 4000;
 
-struct Record {
+struct record {
     char author[12];
     char title[32];
     char publisher[16];
@@ -26,28 +26,25 @@ struct Record {
 };
 
 struct Vertex {
-    Record* data;
+    record* data;
     Vertex* left;
     Vertex* right;
     Vertex* root;
 };
 
-Record* record()
+void scan_database(record* Array, record** A, int n)
 {
-    FILE* flopa;
-    Record rec[N];
-    flopa = fopen("testBase1.dat", "rb");
-    int blopa = 0;
-    blopa = fread((Record*)rec, sizeof(Record), N, flopa);
-    if (!rec)
-    {
-        cerr << "opennig error";
-        exit(1);
-    }
-    return rec;
+	FILE* database;
+	database = fopen("testBase1.dat", "rb");
+	fread((record*)Array, sizeof(record), n, database);
+	fclose(database);
+	for (int i = 0; i < n; i++)
+	{
+		A[i] = &Array[i];
+	}
 }
 
-void quicksort(Record* arr, int l, int r) 
+/*void quicksort(record* arr, int l, int r) 
 {
     Record x;
     Record temp;
@@ -83,43 +80,91 @@ void quicksort(Record* arr, int l, int r)
     {
         quicksort(arr,i,r);
     }
+}*/
+
+void print_database(record* A, int n)
+{
+	int temp = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cout << i << ". " << A[i].author << " " << A[i].title << " " << A[i].publisher << " " << A[i].year << "\n";
+
+		if ((i % 20 == 0) && (i != 0))
+		{
+			cout << "\nContinue? 0/1: ";
+			scanf("%d", &temp);
+			if (temp == 0) break;
+			else system("cls");
+		}
+	}
+	system("pause");
 }
 
-
-
-
-
-void print_data(Record rec[])
+void print_array(record** A, int n)
 {
-    int k = 0;
-    for (int i = 0; i < 4000; i++)
-    {
-        cout<< i+1 <<") " << rec[i].author << " " << rec[i].title << " " << rec[i].publisher << " " << rec[i].year << " " << rec[i].num_of_page << endl;
-        k++;
-        if (k == 20)
-        {
-            cout << "if you want to continue press 1,press 2 if you want stop, press any button to search all data base";
-            int temp = 0;
-            cin >> temp;
-            if (temp == 1)
-            {
-                k = 0;
-            }
-            if (temp == 2)
-            {
-                break;
-            }
-        }
-    }
+	int temp = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cout << i << ". " << A[i]->author << " " << A[i]->title << " " << A[i]->publisher << " " << A[i]->year << "\n";
+		if ((i % 20 == 0) && (i != 0))
+		{
+			cout << "\nContinue? 0/1: ";
+			scanf("%d", &temp);
+			if (temp == 0) break;
+			else system("cls");
+		}
+	}
+	system("pause");
 }
 
 int main()
 {
-    Record* exmp;
-    exmp = record();
-    char key[12] = "Глебов М В";
-    quicksort(exmp, 0, 3876);
-    print_data(exmp);
+	int n = 4000, temp, ind, k = -1;
+	
+	record Array[n];
+	record* A[n];
+
+    
+    scan_database(Array, A, n);
+    
+    while (1)
+	{
+
+		cout << "1 - Print BD " << endl;
+		cout << "2 - Print Array " << endl;
+		cout << "3 - Search " << endl;
+		cout << "4 - Tree " << endl;
+		cout << "5 - Coding " << endl;
+		cout << "0 - End " << endl;
+		scanf("%d", &temp);
+		switch (temp)
+		{
+		case 1:
+			print_database(Array, n);
+			break;
+		case 2:
+			print_array(A, n);	
+			break;
+		/*case 3:
+			search(A, n, k, ind);
+			break;
+		case 4:
+			if(k < 0)
+				cout << "Search first\n";
+			else
+				tree(&A[ind], k);
+			break;
+		case 5:
+			coding(n);
+            break;	*/
+		default:
+			return 1;
+		}
+		system("cls");
+	}
+    
+    //print_data(exmp);
+    
     cout << endl << endl << endl;
     return 0;
 }
